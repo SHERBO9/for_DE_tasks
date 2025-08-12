@@ -6,6 +6,10 @@ create database Sample1
 /* Alter name of a DB */
 Alter database Sample1 modify name=SampleDBModified
 
+/*alternative*/
+
+sp_renameDB 'SampleDBModified', 'SampleNew'
+
 
 /* drop DB*/
 
