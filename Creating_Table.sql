@@ -66,4 +66,39 @@ Insert into PersonTbl(ID, Name, Email) Values(
 
 ALTER TABLE PersonTbl
 DROP CONSTRAINT DF_Phone 
+
+
+
+/* Foreign key constraint Delete and Update Cascade, set null, set default no action*/
  
+ Create table Fields(
+ ID int primary key identity(1,1) not null,
+ FieldName varchar(10) not null
+ )
+
+
+ Create table Students(
+ ID int Primary key identity(1,1) not null,
+ FullName varchar(100) not null,
+ FieldID int Default NULL,
+
+ CONSTRAINT FK_STUDENTS_FIELDS FOREIGN KEY (FieldID)
+ REFERENCES Fields(ID)
+ ON DELETE SET NULL 
+ ON UPDATE CASCADE  
+ )
+ /*
+ SET NULL requires that the foreign key column (TestID) is nullable.
+
+CASCADE should be used carefully — it can remove a lot of data if not intended.
+
+NO ACTION (or RESTRICT) prevents deletion/update if there are related rows.*/
+
+-- Alternatively:
+
+ALTER TABLE STUDENTS ADD CONSTRAINT FK_STUDENTS_FIELDS
+FOREIGN KEY Fields REFERENCES Fields(ID)
+
+
+select *from students
+select *from fields
