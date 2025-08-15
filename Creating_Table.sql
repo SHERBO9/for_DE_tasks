@@ -1,4 +1,5 @@
 
+
 /* Creating a table */
 
 create table GenderTbl
@@ -66,4 +67,3 @@ Insert into PersonTbl(ID, Name, Email) Values(
 ALTER TABLE PersonTbl
 DROP CONSTRAINT DF_Phone 
  
-
