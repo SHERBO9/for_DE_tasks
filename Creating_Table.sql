@@ -87,6 +87,8 @@ DROP CONSTRAINT DF_Phone
  ON DELETE SET NULL 
  ON UPDATE CASCADE  
  )
+ 
+ /*  */
  /*
  SET NULL requires that the foreign key column (TestID) is nullable.
 
