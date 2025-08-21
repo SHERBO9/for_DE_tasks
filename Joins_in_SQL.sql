@@ -29,7 +29,7 @@ SELECT *FROM Fields
 SELECT s.ID, s.FullName, f.FieldName
 FROM Students s
 LEFT JOIN Fields f ON s.FieldID=f.ID
--- ALTERNATIVELY:
+
 
 /*Returns all rows from the left table (Students), even if there is no match in Fields.*/
 
@@ -75,7 +75,7 @@ SELECT s1.FullName AS Student1, s2.FullName AS Student2
 FROM Students s1
 INNER JOIN Students s2 ON s1.FieldID = s2.FieldID
 WHERE s1.ID <> s2.ID;
-
+-- 
 
 SELECT *from Students
 SELECT *FROM Fields
@@ -91,3 +91,4 @@ SELECT s.ID, s.FullName, f.FieldName
 FROM Students s
 INNER JOIN Fields f ON s.FieldID = f.ID
 WHERE f.FieldName = 'Information Technology';
+
