@@ -60,3 +60,25 @@ Order by Department
 
 Select *from Employees
 
+
+
+/* Where and Having clauses */
+
+/*
+1. WHERE clause can be used with SELECT, INSERT, UPDATE statements, while HAVING clause can be used 
+only with SELECT statement
+
+2. WHERE clause filters rows before aggregation(Grouping), while HAVING filters groups
+after aggregation are performed
+
+3. Aggregation functions can not be used in Where clauses, unless it is in a subquery contained
+in a HAVING clauses, whereas aggregate functions can be used in HAVING clauses
+
+
+*/
+
+Select Department, Job, SUM(Salary) as [Total salary], COUNT(ID) as [Total employees] 
+From Employees
+Group by Department, Job
+Having SUM(Salary)>5000 
+
