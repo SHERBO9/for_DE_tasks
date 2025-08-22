@@ -1,5 +1,32 @@
 /*Advanced and intelligent JOINS*/
 
+
+Select s.ID, s.FullName, f.FieldName
+from Students s
+Left Join Fields f on s.FieldID=f.ID
+Where  s.FieldID is NUll -- or Where f.ID is Null
+
+-- Only returns which FieldName is Null (Only left side of 2 matching tables)
+
+
+
+Select s.ID, s.FullName, f.FieldName
+from Students s
+Right Join Fields f on s.FieldID=f.ID
+Where  s.FieldID is NUll -- or Where f.ID is Null
+-- Only returns which FieldName is Null (Only right side of 2 matching tables)
+
+
+Select s.ID, s.FullName, f.FieldName
+from Students s
+Full Join Fields f on s.FieldID=f.ID
+Where  s.FieldID is NUll
+or  f.ID is Null
+
+
+
+
+
 -- Count students in each field
 
 SELECT f.FieldName, COUNT(s.ID) AS StudentCount
@@ -9,64 +36,80 @@ GROUP BY f.FieldName;
 
 
 
--- Find students who are in the largest field
-SELECT s.FullName, f.FieldName
+
+-- Find students who are in the largest top 5 fields
+SELECT s.FullName ,f.FieldName, bigField.StudentCount
 FROM Students s
 INNER JOIN ( -- top 5 fields
     SELECT TOP 5 FieldID, COUNT(*) AS StudentCount
     FROM Students
     GROUP BY FieldID
+    Having FieldID is not Null
     ORDER BY COUNT(*) DESC
 ) bigField ON s.FieldID = bigField.FieldID
-INNER JOIN Fields f ON s.FieldID = f.ID;
+INNER JOIN Fields f ON s.FieldID = f.ID
+Order by FieldName
 
 select *from Students
 select *from Fields
+select *from Mentors
 
 
+Select s.FullName, f.FieldName,m.MentorName
+from Students s
+Left Join Fields f on s.FieldID=f.ID
+Join Mentors m on s.MentorID=m.ID
+/*
+Students joined with Fields
 
--- Suppose Students table has MentorID column (FK to StudentID)
-SELECT s.FullName AS Student, m.FullName AS Mentor
+Students joined with Mentors
+
+Result: Each student’s name + field name + mentor name.
+*/
+
+-- Show all students, their field, and mentor (if exists)
+SELECT s.FullName, f.FieldName, m.MentorName
 FROM Students s
-LEFT JOIN Students m ON s.MentorID = m.StudentID;
+LEFT JOIN Mentors m ON s.MentorID = m.ID
+INNER JOIN Fields f ON s.FieldID = f.ID;
+
+-- Show mentors with number of students in each field
+SELECT m.MentorName, f.FieldName, COUNT(s.ID) AS StudentCount
+FROM Mentors m
+INNER JOIN Students s ON m.ID = s.MentorID
+INNER JOIN Fields f ON s.FieldID = f.ID
+GROUP BY m.MentorName, f.FieldName
+ORDER BY StudentCount DESC;
 
 
-Create table Mentor(
-ID int primary key not null,
-MentorName Varchar(100) not null,
-)
+/*SELF JOIN*/
+-- Show students who have the same mentor
 
-Alter table Students add  MentorID int null
-Foreign key (MentorID) references Mentor(ID)
-
-INSERT INTO Mentor (ID, MentorName) VALUES
-(1, 'Dr. Alice Johnson'),
-(2, 'Prof. Bob Smith'),
-(3, 'Dr. Charlie Davis'),
-(4, 'Prof. Diana Green'),
-(5, 'Dr. Edward Wilson'),
-(6, 'Prof. Fiona Brown'),
-(7, 'Dr. George Clark'),
-(8, 'Prof. Helen White'),
-(9, 'Dr. Ian Taylor'),
-(10, 'Prof. Julia Adams');
-
--- Students without a field OR fields without students
-SELECT s.FullName, f.FieldName
-FROM Students s
-FULL JOIN Fields f ON s.FieldID = f.ID
-WHERE s.ID IS NULL OR f.ID IS NULL;
+SELECT s1.ID, s1.FullName AS Student1, s2.FullName AS Student2, m.MentorName
+FROM Students s1
+INNER JOIN Students s2 ON s1.MentorID = s2.MentorID AND s1.ID < s2.ID
+INNER JOIN Mentors m ON s1.MentorID = m.ID;
 
 
--- Find oldest student in each field
-SELECT f.ID,f.FieldName,s.ID, s.FullName, s.BirthDate
-FROM Students s
-INNER JOIN Fields f ON s.ID = f.ID
-WHERE s.BirthDate = (
-    SELECT MIN(BirthDate) 
-    FROM Students s2 
-   
-);
+
+Select *from Employees
 
 
+Select  E.Name, M.Name as Manager
+from Employees E
+Left join Employees M on E.ManagerID=M.ID
+
+Select  E.Name, M.Name as Manager
+from Employees E
+Join Employees M on E.ManagerID=M.ID
+
+
+Select  E.Name, M.Name as Manager
+from Employees E
+Right join Employees M on E.ManagerID=M.ID
+
+
+Select  E.Name, M.Name as Manager
+from Employees E
+Cross join Employees M 
 
